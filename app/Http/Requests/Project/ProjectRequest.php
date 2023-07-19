@@ -27,9 +27,14 @@ class ProjectRequest extends FormRequest
 
         return [
             'name' => ['required', 'string', Rule::unique('projects', 'name')],
+            'slug' => ['nullable', 'string', Rule::unique('projects', 'slug')],
+            'description' => 'required|string|max:255',
             'client' => 'required|string',
             'url' => 'required|string',
-            'category_id' => 'required|integer|exists:categories,id',
+            'types' => 'required|array',
+            'types*' => 'required|integer|exists:types,id',
+            'tags' => 'required|array',
+            'tags*' => 'required|integer|exists:tags,id',
             'images' => 'nullable|array',
             'images.*' => 'required|file|mimes:jpg,jpeg,png|max:10240'
         ];

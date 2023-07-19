@@ -24,7 +24,8 @@ class CategoryRequest extends FormRequest
     {
         return [
             'name' => ['required', 'string', 'max:255', Rule::unique('categories', 'name')],
-            'icon' => ['required', 'image', 'mimes:jpg,jpeg,png']
+            'slug' => ['nullable', 'string', 'max:255', Rule::unique('categories', 'slug')],
+            'icon' => ['required', 'image', 'mimes:jpg,jpeg,png,svg']
         ];
     }
 }

@@ -6,7 +6,8 @@ use App\Constants\ResponseConstants\ProjectResponseEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Project\ProjectRequest;
 use App\Http\Requests\Project\UpdateProjectRequest;
-use App\Http\Resources\ProjectResource;
+use App\Http\Resources\Project\ProjectIndexResource;
+use App\Http\Resources\Project\ProjectResource;
 use App\Models\Project;
 use App\Services\ProjectService;
 
@@ -25,7 +26,7 @@ class ProjectController extends Controller
     {
         return $this->execute(function (){
             $projects = Project::all();
-            return ProjectResource::collection($projects);
+            return ProjectIndexResource::collection($projects);
         }, ProjectResponseEnum::PROJECT_LIST);
     }
 
@@ -46,7 +47,7 @@ class ProjectController extends Controller
     public function show(Project $project)
     {
         return $this->execute(function () use ($project){
-            return ProjectResource::make($project);
+            return ProjectResource::make($project->load('types', 'tags'));
         }, ProjectResponseEnum::PROJECT_SHOW);
     }
 
@@ -67,6 +68,7 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {
         return $this->execute(function () use ($project){
+            $project->types()->detach();
             $project->clearMediaCollection('project-images');
             $project->delete();
         }, ProjectResponseEnum::PROJECT_DELETE);

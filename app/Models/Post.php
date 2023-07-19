@@ -21,7 +21,11 @@ class Post extends Model implements HasMedia
         'description',
         'body',
         'views',
-        'category_id'
+        'category_id',
+        'read_time',
+        'instagram',
+        'github',
+        'published_at'
     ];
 
     public function user(): BelongsTo

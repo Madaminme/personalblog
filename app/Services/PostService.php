@@ -15,36 +15,39 @@ class PostService
      */
     public function store(array $validated)
     {
+        if (!isset($validated['slug'])){
+            $validated['slug'] = str()->slug($validated['title']);
+        }
         $validated['user_id'] = auth()->id();
-        $validated['slug'] = str()->slug($validated['title']);
+        $validated['read_time'] = ceil(str_word_count($validated['body'])/150);
         $post = Post::query()->create($validated);
-
-        if (!is_null($images = \Arr::get($validated, 'images'))) {
-            foreach ($images as $image) {
-                $post->addMedia($image)->toMediaCollection('post-images');
-            }
+        $post->tags()->attach($validated['tags']);
+        if (isset($validated['image'])) {
+                $post->addMedia($validated['image'])->toMediaCollection('post-images');
         }
         return $post;
     }
 
     public function update($validated, $post)
     {
-        $validated['user_id'] = auth()->id();
-        $validated['slug'] = str()->slug($validated['title']);
-        $post->update($validated);
-
-        if (!is_null($images = \Arr::get($validated, 'images'))) {
-            $post->clearMediaCollection('post-images');
-            foreach ($images as $image) {
-                $post->addMedia($image)->toMediaCollection('post-images');
-            }
-
+        if (!isset($validated['slug'])){
+            $validated['slug'] = str()->slug($validated['title']);
         }
+        $validated['user_id'] = auth()->id();
+        $validated['read_time'] = ceil(str_word_count($validated['body'])/150);
+        $post->update($validated);
+        $post->tags()->sync($validated['tags']);
+        if (isset($validated['image'])) {
+            $post->clearMediaCollection('post-images');
+            $post->addMedia($validated['image'])->toMediaCollection('post-images');
+        }
+
         return $post;
     }
 
     public function delete($post): void
     {
+        $post->tags()->detach();
         if (isset($post->image))
         {
             Storage::delete($post->image);

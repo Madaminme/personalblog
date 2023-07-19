@@ -6,13 +6,13 @@ use App\Constants\ResponseConstants\PostResponseEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Post\PostRequest;
 use App\Http\Requests\Post\UpdatePostRequest;
-use App\Http\Resources\PostIndexResource;
-use App\Http\Resources\PostResource;
-use App\Models\Category;
+use App\Http\Resources\CommentResource;
+use App\Http\Resources\Post\PostIndexResource;
+use App\Http\Resources\Post\PostResource;
+use App\Http\Resources\Post\ShowPostResource;
+use App\Models\Comment;
 use App\Models\Post;
 use App\Services\PostService;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -52,7 +52,7 @@ class PostController extends Controller
         return $this->execute(function () use ($post){
            $post->views ++;
            $post->save();
-           return PostResource::make($post->load('comments'));
+           return ShowPostResource::make($post);
         }, PostResponseEnum::POST_SHOW);
     }
 
@@ -75,5 +75,17 @@ class PostController extends Controller
         return $this->execute(function () use ($post){
             $this->postService->delete($post);
         }, PostResponseEnum::POST_DELETE);
+    }
+
+    public function comments(int $postId)
+    {
+        return $this->execute(function () use ($postId){
+           $comments = Comment::query()
+               ->with('replies')
+               ->where('post_id', '=', $postId)
+               ->paginate(5);
+
+           return CommentResource::collection($comments);
+        }, PostResponseEnum::POST_COMMENTS);
     }
 }

@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Http\Requests\Comment;
+namespace App\Http\Requests\Type;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class CommentRequest extends FormRequest
+class TypeRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,10 +23,8 @@ class CommentRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required|email|max:255',
-            'post_id' => 'required|integer|exists:posts,id',
-            'parent_id' => 'nullable|integer|exists:comments,id',
-            'body' => 'required|string|max:255'
+            'name' => ['required', 'string', Rule::unique('types', 'name')],
+            'slug' => ['nullable', 'string', Rule::unique('types', 'slug')]
         ];
     }
 }

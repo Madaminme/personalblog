@@ -21,7 +21,8 @@ class DatabaseSeeder extends Seeder
             ProjectSeeder::class,
             NewsletterSeeder::class,
             ContactSeeder::class,
-            TagSeeder::class
+            TagSeeder::class,
+            TypeSeeder::class
         ]);
     }
 }

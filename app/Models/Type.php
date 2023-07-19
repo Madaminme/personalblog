@@ -7,21 +7,17 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Tag extends Model
+class Type extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'name',
+        'slug'
     ];
 
-    public function posts(): BelongsToMany
+    public function projects():BelongsToMany
     {
-        return $this->belongsToMany(Post::class, 'post_tags', 'tag_id', 'id');
-    }
-
-    public function projects(): BelongsToMany
-    {
-        return $this->belongsToMany(Project::class, 'project_tags', 'tag_id', 'id');
+        return $this->belongsToMany(Project::class, 'project_type', 'type_id', 'id');
     }
 }

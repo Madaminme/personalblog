@@ -17,9 +17,13 @@ return new class extends Migration
             $table->string('slug', 150);
             $table->string('title', 150);
             $table->string('description', 255);
-            $table->string('body');
+            $table->longText('body');
+            $table->string('read_time');
             $table->integer('views')->default(0);
             $table->foreignId('category_id');
+            $table->string('instagram')->nullable();
+            $table->string('github')->nullable();
+            $table->timestamp('published_at')->default(now());
             $table->timestamps();
         });
     }

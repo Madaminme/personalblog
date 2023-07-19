@@ -8,7 +8,6 @@ use App\Http\Requests\Comment\CommentRequest;
 use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Services\CommentService;
-use Illuminate\Http\Request;
 
 class CommentController extends Controller
 {
@@ -36,7 +35,7 @@ class CommentController extends Controller
     public function store(CommentRequest $request)
     {
         return $this->execute(function () use ($request){
-            $comment = $this->commentService->store($request);
+            $comment = $this->commentService->store($request->validated());
             return CommentResource::make($comment);
         }, CommentResponseEnum::COMMENT_CREATED);
     }
@@ -47,7 +46,7 @@ class CommentController extends Controller
     public function show(Comment $comment)
     {
         return $this->execute(function () use($comment){
-            return CommentResource::make($comment);
+            return CommentResource::make($comment->load('replies'));
         }, CommentResponseEnum::COMMENT_SHOW);
     }
 
@@ -57,7 +56,7 @@ class CommentController extends Controller
     public function update(CommentRequest $request, Comment $comment)
     {
         return $this->execute(function () use ($request, $comment){
-            $comment = $this->commentService->update($request, $comment);
+            $comment = $this->commentService->update($request->validated(), $comment);
             return CommentResource::make($comment);
         }, CommentResponseEnum::COMMENT_UPDATE);
     }
@@ -70,5 +69,13 @@ class CommentController extends Controller
         return $this->execute(function () use ($comment){
             $comment->delete();
         }, CommentResponseEnum::COMMENT_DELETE);
+    }
+
+    public function last_comments()
+    {
+        return $this->execute(function (){
+            $comments = Comment::query()->latest()->take(config("custom.max_comments"))->get();
+            return CommentResource::collection($comments);
+        }, CommentResponseEnum::LAST_COMMENTS);
     }
 }

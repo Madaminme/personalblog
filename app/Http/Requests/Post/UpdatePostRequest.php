@@ -25,11 +25,16 @@ class UpdatePostRequest extends FormRequest
         $post = request()->route('post');
         return [
             'title' => ['nullable','string', 'max:150', Rule::unique('posts', 'title')->ignoreModel($post)],
+            'slug' => ['nullable','string','max:150', Rule::unique('posts', 'slug')],
             'description' => 'nullable|string|max:255',
             'body' => 'nullable|string',
             'category_id' => 'nullable|integer|exists:categories,id',
-            'images' => 'nullable|array',
-            'images.*' => 'required|file|mimes:jpg,jpeg,png|max:10240'
+            'tags' => 'required|array',
+            'tags*' => 'required|integer|exists:tags,id',
+            'image' => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
+            'instagram' => 'nullable|string|max:255|url',
+            'github' => 'nullable|string|max:255|url',
+            'published_at' => 'nullable|date'
         ];
     }
 }

@@ -18,13 +18,12 @@ class ProjectFactory extends Factory
      */
     public function definition(): array
     {
-        $category = Category::query()->inRandomOrder()->first();
         return [
             'name' => $this->faker->sentence(4),
             'slug' => $this->faker->slug,
+            'description' => $this->faker->text(255),
             'client' => $this->faker->company,
-            'url' => $this->faker->domainName,
-            'category_id' => $category->id
+            'url' => $this->faker->url,
         ];
     }
 }

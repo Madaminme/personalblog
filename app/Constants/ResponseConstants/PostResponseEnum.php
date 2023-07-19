@@ -9,4 +9,5 @@ enum PostResponseEnum: string implements ResponseInterface
     case POST_SHOW = "Post information";
     case POST_UPDATE = "Post updated";
     case POST_DELETE = "Post deleted";
+    case POST_COMMENTS = "Post comments";
 }

@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Tag;
 use App\Constants\ResponseConstants\TagResponseEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tag\TagRequest;
-use App\Http\Resources\TagResource;
+use App\Http\Resources\Tag\TagResource;
+use App\Http\Resources\Tag\TagShowResource;
 use App\Models\Tag;
 
 class TagController extends Controller
@@ -14,7 +15,7 @@ class TagController extends Controller
     {
         return $this->execute(function () {
             $tags = Tag::all();
-            return TagResource::collection($tags);
+            return TagResource::collection($tags->load('posts')); //'posts' => withCount('posts')
         }, TagResponseEnum::TAG_LIST);
     }
 
@@ -29,7 +30,7 @@ class TagController extends Controller
     public function show(Tag $tag)
     {
         return $this->execute(function () use ($tag){
-            return TagResource::make($tag);
+            return TagShowResource::make($tag->load('posts'));
         }, TagResponseEnum::TAG_SHOW);
     }
 

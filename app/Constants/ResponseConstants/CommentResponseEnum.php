@@ -9,4 +9,5 @@ enum CommentResponseEnum:string implements ResponseInterface
     case COMMENT_SHOW = "Comment information";
     case COMMENT_UPDATE = "Comment updated";
     case COMMENT_DELETE = "Comment deleted";
+    case LAST_COMMENTS = "Last comments";
 }

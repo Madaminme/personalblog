@@ -1,11 +1,12 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Type;
 
+use App\Http\Resources\Project\ProjectResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ProjectResource extends JsonResource
+class TypeResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,10 +19,7 @@ class ProjectResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'slug' => $this->slug,
-            'client' => $this->client,
-            'url' => $this->url,
-            'image' => $this->resource->getMedia('project-images')->pluck('original_url'),
-            'category_id' => $this->category->name
+            'projects' => ProjectResource::collection($this->whenLoaded('projects'))
         ];
     }
 }

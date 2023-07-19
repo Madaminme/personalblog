@@ -4,9 +4,8 @@ namespace App\Http\Controllers\Tag;
 
 use App\Constants\ResponseConstants\TagResponseEnum;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\TagResource;
+use App\Http\Resources\Tag\TagResource;
 use App\Models\Tag;
-use Illuminate\Http\Request;
 
 class PopularTagsController extends Controller
 {

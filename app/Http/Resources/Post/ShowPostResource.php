@@ -1,11 +1,14 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Post;
 
+use App\Http\Resources\CommentResource;
+use App\Http\Resources\Tag\TagResource;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class PostResource extends JsonResource
+class ShowPostResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -19,13 +22,12 @@ class PostResource extends JsonResource
             'username' => $this->user->username,
             'slug' => $this->slug,
             'title' => $this->title,
-            'description' => $this->description,
             'body' => $this->body,
             'views' => $this->views,
             'image' => $this->resource->getMedia('post-images')->pluck('original_url'),
             'category' => $this->category->name,
             'tags' => TagResource::collection($this->tags),
-            'comments' => CommentResource::collection($this->whenLoaded('comments'))
+            'published_at' => Carbon::parse($this->published_at)->format('m/d/Y')
         ];
     }
 }

@@ -12,10 +12,11 @@ class Comment extends Model
     use HasFactory;
 
     protected $fillable = [
-        'user_id',
+        'email',
         'post_id',
         'body',
-        'parent_id'
+        'parent_id',
+        'remember_token'
     ];
 
     public function user(): BelongsTo
@@ -25,6 +26,6 @@ class Comment extends Model
 
     public function replies(): HasMany
     {
-        return $this->hasMany(Comment::class, 'parent_id');
+        return $this->hasMany(static::class, 'parent_id')->with('replies');
     }
 }

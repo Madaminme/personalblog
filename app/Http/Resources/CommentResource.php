@@ -2,6 +2,7 @@
 
 namespace App\Http\Resources;
 
+use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -16,10 +17,11 @@ class CommentResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'username' => $this->user->username,
+            'email' => $this->email,
             'post_id' => $this->post_id,
-            'parent_id' => $this->parent_id,
-            'body' => $this->body
+            'replies' => static::collection($this->whenLoaded('replies')),
+            'body' => $this->body,
+            'token' => $this->remember_token
         ];
     }
 }

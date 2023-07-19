@@ -15,7 +15,9 @@ class CategoryService
      */
     public function store($validated)
     {
-        $validated['slug'] = str()->slug($validated['name']);
+        if (!isset($validated['slug'])){
+            $validated['slug'] = str()->slug($validated['name']);
+        }
         $category = Category::query()->create($validated);
 
         if (!is_null($validated['icon'])) {
@@ -26,8 +28,9 @@ class CategoryService
 
     public function update($validated, $category)
     {
-        $validated['slug'] = str()->slug($validated['name']);
-        $category->update($validated);
+        if (!isset($validated['slug'])){
+            $validated['slug'] = str()->slug($validated['name']);
+        }        $category->update($validated);
 
         if (isset($validated['icon'])) {
             $category->clearMediaCollection('category-icons');

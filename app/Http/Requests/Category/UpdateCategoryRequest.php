@@ -25,6 +25,7 @@ class UpdateCategoryRequest extends FormRequest
         $category = request()->route('category');
         return [
             'name' => ['nullable', 'string', 'max:255', Rule::unique('categories', 'name')->ignoreModel($category)],
+            'slug' => ['nullable', 'string', 'max:255', Rule::unique('categories', 'slug')],
             'icon' => ['nullable', 'image', 'mimes:jpg,jpeg,png']
         ];
     }

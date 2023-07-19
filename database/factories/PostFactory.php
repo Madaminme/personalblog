@@ -25,9 +25,13 @@ class PostFactory extends Factory
             'slug' => $this->faker->slug,
             'title' => $this->faker->sentence(3),
             'description' => $this->faker->text(100),
-            'body' => $this->faker->text(255),
+            'body' => $this->faker->text(1500),
+            'read_time' => $this->faker->numberBetween(1,10),
             'views' => $this->faker->numberBetween(1, 25),
             'category_id' => $category->id,
+            'instagram' => $this->faker->url,
+            'github' => $this->faker->url,
+            'published_at' => $this->faker->date
         ];
     }
 }

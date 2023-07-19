@@ -23,11 +23,16 @@ class PostRequest extends FormRequest
     {
         return [
             'title' => 'required|string|max:150|unique:posts,title',
+            'slug' => 'nullable|string|max:150|unique:posts,slug',
             'description' => 'required|string|max:255',
             'body' => 'required|string',
             'category_id' => 'required|integer|exists:categories,id',
-            'images' => 'nullable|array',
-            'images.*' => 'required|file|mimes:jpg,jpeg,png|max:10240'
+            'tags' => 'required|array',
+            'tags*' => 'required|integer|exists:tags,id',
+            'image' => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
+            'instagram' => 'nullable|string|max:255',
+            'github' => 'nullable|string|max:255',
+            'published_at' => 'nullable|date'
         ];
     }
 }

@@ -12,6 +12,7 @@ use App\Http\Controllers\Post\PostController;
 use App\Http\Controllers\Project\ProjectController;
 use App\Http\Controllers\Tag\PopularTagsController;
 use App\Http\Controllers\Tag\TagController;
+use App\Http\Controllers\Type\TypeController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -37,16 +38,20 @@ Route::prefix('v1')->group(function (){
         Route::apiResource('posts', PostController::class);
         //Category routes
         Route::apiResource('categories', CategoryController::class);
-        //Comment route
-        Route::apiResource('comments', CommentController::class);
+        //Type routes
+        Route::apiResource('types', TypeController::class);
         //Project route
         Route::apiResource('projects', ProjectController::class);
         //Contact routes
         Route::get('contacts', [ContactController::class, 'index'])->name('contact.index');
         //Tags
         Route::apiResource('tags', TagController::class);
+        //Type routes
+        Route::apiResource('types', TypeController::class);
         //Newsletters
         Route::get('newsletters', [NewsletterController::class, 'index'])->name('newsletter.index');
+
+
     });
 
     Route::middleware('guest:sanctum')->group(function (){
@@ -54,16 +59,17 @@ Route::prefix('v1')->group(function (){
         Route::post('login', LoginController::class);
     });
 
-    //public routes
+    //---------------------public routes-----------------//
+    Route::get('posts/{postId}/comments', [PostController::class, 'comments'])->name('post_comments');
     Route::get('posts', [PostController::class, 'index']);
     Route::get('posts/{post}', [PostController::class, 'show']);
-//    Route::get('posts/{post}', [PostController::class, 'show']);
-//    domain/posts/post-slug
-//    domain/web-development/hello-world
     //Category routes
     Route::get('categories', [CategoryController::class, 'index']);
     Route::get('categories/{category}', [CategoryController::class, 'show']);
     Route::get('popular_categories', PopularCategoriesController::class);
+    //Type routes
+    Route::get('types', [TypeController::class, 'index']);
+    Route::get('types/{type}', [TypeController::class, 'show']);
     //Project routes
     Route::get('projects', [ProjectController::class, 'index']);
     Route::get('projects/{project}', [ProjectController::class, 'show']);
@@ -74,6 +80,7 @@ Route::prefix('v1')->group(function (){
     Route::post('newsletters', [NewsletterController::class, 'store'])->name('newsletter.store');
     //Contacts
     Route::post('contacts', [ContactController::class, 'store'])->name('contact.store');
-
-
+    //Comments
+    Route::get('last_comments', [CommentController::class, 'last_comments'])->name('last_comments');
+    Route::post('comments', [CommentController::class, 'store'])->name('comment.store');
 });
