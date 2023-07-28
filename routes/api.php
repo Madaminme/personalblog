@@ -13,6 +13,7 @@ use App\Http\Controllers\Project\ProjectController;
 use App\Http\Controllers\Tag\PopularTagsController;
 use App\Http\Controllers\Tag\TagController;
 use App\Http\Controllers\Type\TypeController;
+use App\Http\Controllers\User\ActiveUserController;
 use App\Http\Controllers\User\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -63,6 +64,8 @@ Route::prefix('v1')->group(function (){
     Route::get('posts/{postId}/comments', [PostController::class, 'comments'])->name('post_comments');
     Route::get('posts', [PostController::class, 'index']);
     Route::get('posts/{post}', [PostController::class, 'show']);
+    Route::get('recent_posts', [PostController::class, 'recent']);
+    Route::get('popular_posts', [PostController::class, 'popular']);
     //Category routes
     Route::get('categories', [CategoryController::class, 'index']);
     Route::get('categories/{category}', [CategoryController::class, 'show']);
@@ -83,4 +86,5 @@ Route::prefix('v1')->group(function (){
     //Comments
     Route::get('last_comments', [CommentController::class, 'last_comments'])->name('last_comments');
     Route::post('comments', [CommentController::class, 'store'])->name('comment.store');
+    Route::get('active_users', ActiveUserController::class)->name('active-users');
 });

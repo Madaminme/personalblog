@@ -26,6 +26,9 @@ class UserRequest extends FormRequest
             "username" => "required|string|max:200|unique:users,username",
             "email" => "required|email|unique:users|unique:users,email",
             "password" => "required|string|min:8",
+            "instagram" => "nullable|url",
+            "github" => "nullable|url",
+            "telegram" => "nullable|url",
         ];
     }
 }

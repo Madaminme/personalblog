@@ -13,4 +13,5 @@ enum UserResponseEnum: string implements ResponseInterface
     case USER_LOGIN = "User login";
     case ERROR = "Something went wrong, check Logs!";
     case USER_LOGOUT = 'User successfully logout';
+    case ACTIVE_USERS = "Most active users";
 }

@@ -28,7 +28,7 @@ class PostController extends Controller
     public function index()
     {
         return $this->execute(function (){
-            $posts = Post::all();
+            $posts = Post::paginate(5);
             return PostIndexResource::collection($posts);
         }, PostResponseEnum::POST_LIST);
     }
@@ -75,6 +75,22 @@ class PostController extends Controller
         return $this->execute(function () use ($post){
             $this->postService->delete($post);
         }, PostResponseEnum::POST_DELETE);
+    }
+
+    public function recent()
+    {
+        return $this->execute(function (){
+            $posts = Post::query()->latest()->limit(5)->get();
+            return PostIndexResource::collection($posts);
+        }, PostResponseEnum::RECENT_POST);
+    }
+
+    public function popular()
+    {
+        return $this->execute(function (){
+            $populars = Post::query()->orderByDesc('views')->limit(5)->get();
+            return PostIndexResource::collection($populars);
+        }, PostResponseEnum::POPULAR_POSTS);
     }
 
     public function comments(int $postId)

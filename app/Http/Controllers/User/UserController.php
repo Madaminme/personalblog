@@ -5,9 +5,8 @@ namespace App\Http\Controllers\User;
 use App\Constants\ResponseConstants\UserResponseEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\User\UserRequest;
-use App\Http\Resources\UserResource;
+use App\Http\Resources\User\UserResource;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
@@ -27,12 +26,8 @@ class UserController extends Controller
     public function store(UserRequest $request)
     {
         return $this->execute(function () use($request){
-            $user = User::query()->create([
-                'name' => $request->name,
-                'username' => $request->username,
-                'email' => $request->email,
-                'password' => bcrypt($request->password),
-            ]);
+            $validated = $request->validated();
+            $user = User::query()->create($validated);
             return UserResource::make($user);
         }, UserResponseEnum::USER_CREATE);
     }
@@ -52,12 +47,7 @@ class UserController extends Controller
     public function update(UserRequest $request, User $user)
     {
         return $this->execute(function () use ($request, $user){
-            $user->update([
-                'name' => $request->name,
-                'username' => $request->username,
-                'email' => $request->email,
-                'password' => bcrypt($request->password),
-            ]);
+            $user->update($request->validated());
             return UserResource::make($user);
         }, UserResponseEnum::USER_UPDATED);
     }
