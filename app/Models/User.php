@@ -25,7 +25,10 @@ class User extends Authenticatable
         'password',
         'instagram',
         'github',
-        'telegram'
+        'telegram',
+        'google_id',
+        'google_token',
+        'google_refresh_token'
     ];
 
     /**

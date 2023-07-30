@@ -20,8 +20,7 @@ class CommentResource extends JsonResource
             'email' => $this->email,
             'post_id' => $this->post_id,
             'replies' => static::collection($this->whenLoaded('replies')),
-            'body' => $this->body,
-            'token' => $this->remember_token
+            'body' => $this->body
         ];
     }
 }

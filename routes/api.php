@@ -10,6 +10,7 @@ use App\Http\Controllers\Contact\ContactController;
 use App\Http\Controllers\Newsletter\NewsletterController;
 use App\Http\Controllers\Post\PostController;
 use App\Http\Controllers\Project\ProjectController;
+use App\Http\Controllers\ProviderController;
 use App\Http\Controllers\Tag\PopularTagsController;
 use App\Http\Controllers\Tag\TagController;
 use App\Http\Controllers\Type\TypeController;
@@ -61,6 +62,11 @@ Route::prefix('v1')->group(function (){
     });
 
     //---------------------public routes-----------------//
+    Route::middleware('web')->group(function (){
+        Route::get('/auth/google/redirect', [ProviderController::class, 'redirect']);
+        Route::get('/auth/google/callback', [ProviderController::class, 'callback']);
+    });
+    //Post routes
     Route::get('posts/{postId}/comments', [PostController::class, 'comments'])->name('post_comments');
     Route::get('posts', [PostController::class, 'index']);
     Route::get('posts/{post}', [PostController::class, 'show']);

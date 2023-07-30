@@ -21,6 +21,9 @@ return new class extends Migration
             $table->string('instagram')->nullable();
             $table->string('github')->nullable();
             $table->string('telegram')->nullable();
+            $table->string('google_id')->nullable();
+            $table->string('google_token')->nullable();
+            $table->string('google_refresh_token')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });
