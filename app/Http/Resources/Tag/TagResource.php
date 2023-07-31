@@ -17,7 +17,7 @@ class TagResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-//            'posts' => $this->whenLoaded('posts')->count()
+            'image' => $this->getFirstMedia('tag-images')?->getUrl()
         ];
     }
 }

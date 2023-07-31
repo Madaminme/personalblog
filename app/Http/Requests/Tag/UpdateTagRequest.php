@@ -3,8 +3,9 @@
 namespace App\Http\Requests\Tag;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
-class TagRequest extends FormRequest
+class UpdateTagRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -21,9 +22,10 @@ class TagRequest extends FormRequest
      */
     public function rules(): array
     {
+        $tag = request()->route('tag');
         return [
-            'name' => 'required|string|unique:tags,name|max:100',
-            'image' => 'required|file|mimes:jpg,jpeg,png|max:10240'
+            'name' => ['nullable', 'string', Rule::unique('tags', 'name')->ignoreModel($tag)],
+            'image' => 'nullable|file|mimes:jpg,jpeg,png|max:10240'
         ];
     }
 }

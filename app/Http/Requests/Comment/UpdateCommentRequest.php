@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Http\Requests\Tag;
+namespace App\Http\Requests\Comment;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class TagRequest extends FormRequest
+class UpdateCommentRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,8 +22,11 @@ class TagRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|unique:tags,name|max:100',
-            'image' => 'required|file|mimes:jpg,jpeg,png|max:10240'
+            'email' => 'required|email|max:255',
+            'post_id' => 'required|integer|exists:posts,id',
+            'parent_id' => 'nullable|integer|exists:comments,id',
+            'body' => 'required|string|max:255',
+            'token' => 'required|string'
         ];
     }
 }

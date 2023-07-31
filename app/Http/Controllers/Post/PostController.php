@@ -93,6 +93,14 @@ class PostController extends Controller
         }, PostResponseEnum::POPULAR_POSTS);
     }
 
+    public function featured()
+    {
+        return $this->execute(function (){
+            $featured = Post::withCount('comments')->orderBy('comments_count', 'desc')->get();
+            return PostIndexResource::collection($featured);
+        }, PostResponseEnum::FEATURED_POSTS);
+    }
+
     public function comments(int $postId)
     {
         return $this->execute(function () use ($postId){

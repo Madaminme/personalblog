@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Tag;
 use App\Constants\ResponseConstants\TagResponseEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Tag\TagRequest;
+use App\Http\Requests\Tag\UpdateTagRequest;
 use App\Http\Resources\Tag\TagResource;
 use App\Http\Resources\Tag\TagShowResource;
 use App\Models\Tag;
+use Illuminate\Support\Facades\Storage;
 
 class TagController extends Controller
 {
@@ -22,7 +24,11 @@ class TagController extends Controller
     public function store(TagRequest $request)
     {
         return $this->execute(function () use ($request){
-            $tag = Tag::query()->create($request->validated());
+            $validated = $request->validated();
+            $tag = Tag::query()->create($validated);
+            if (isset($validated['image'])) {
+                $tag->addMedia($validated['image'])->toMediaCollection('tag-images');
+            }
             return TagResource::make($tag);
         },TagResponseEnum::TAG_CREATE);
     }
@@ -34,10 +40,15 @@ class TagController extends Controller
         }, TagResponseEnum::TAG_SHOW);
     }
 
-    public function update(TagRequest $request, Tag $tag)
+    public function update(UpdateTagRequest $request, Tag $tag)
     {
         return $this->execute(function () use ($request, $tag){
-            $tag->update($request->validated());
+            $validated = $request->validated();
+            $tag->update($validated);
+            if (isset($validated['image'])) {
+                $tag->clearMediaCollection('tag-images');
+                $tag->addMedia($validated['image'])->toMediaCollection('tag-images');
+            }
             return TagResource::make($tag);
         }, TagResponseEnum::TAG_UPDATE);
     }
@@ -45,6 +56,9 @@ class TagController extends Controller
     public function destroy(Tag $tag)
     {
         return $this->execute(function () use ($tag){
+            if (isset($tag->image)) {
+                $tag->clearMediaCollection('tag-images');
+            }
             $tag->delete();
         }, TagResponseEnum::TAG_DELETE);
     }

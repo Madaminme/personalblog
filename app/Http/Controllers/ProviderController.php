@@ -31,8 +31,11 @@ class ProviderController extends Controller
                 'google_refresh_token' => $googleUser->refreshToken  ?? null,
             ]);
             Auth::login($user);
-            dd($user);
-            return redirect('/');
+            $token = $user->createToken('api_token')->plainTextToken;
+            $token_param = http_build_query(['token' =>$token]);
+            $url = config('custom.frontend_host')."?".$token_param;
+            return redirect($url);
+
         }catch (\Exception $exception){
             dd($exception->getMessage());
         }

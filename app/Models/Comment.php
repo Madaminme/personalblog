@@ -28,4 +28,10 @@ class Comment extends Model
     {
         return $this->hasMany(static::class, 'parent_id')->with('replies');
     }
+
+    public function post():BelongsTo
+    {
+        return $this->belongsTo(Post::class);
+    }
+
 }

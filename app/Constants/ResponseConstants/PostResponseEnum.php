@@ -12,4 +12,5 @@ enum PostResponseEnum: string implements ResponseInterface
     case POST_COMMENTS = "Post comments";
     case RECENT_POST = "Recent posts";
     case POPULAR_POSTS = "Popular posts";
+    case FEATURED_POSTS = "Featured posts";
 }

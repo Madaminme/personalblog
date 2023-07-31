@@ -72,6 +72,7 @@ Route::prefix('v1')->group(function (){
     Route::get('posts/{post}', [PostController::class, 'show']);
     Route::get('recent_posts', [PostController::class, 'recent']);
     Route::get('popular_posts', [PostController::class, 'popular']);
+    Route::get('featured_posts', [PostController::class, 'featured']);
     //Category routes
     Route::get('categories', [CategoryController::class, 'index']);
     Route::get('categories/{category}', [CategoryController::class, 'show']);
@@ -93,4 +94,5 @@ Route::prefix('v1')->group(function (){
     Route::get('last_comments', [CommentController::class, 'last_comments'])->name('last_comments');
     Route::post('comments', [CommentController::class, 'store'])->name('comment.store');
     Route::get('active_users', ActiveUserController::class)->name('active-users');
+    Route::put('comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
 });

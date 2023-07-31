@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Comment;
 use App\Constants\ResponseConstants\CommentResponseEnum;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Comment\CommentRequest;
+use App\Http\Requests\Comment\UpdateCommentRequest;
 use App\Http\Resources\CommentResource;
 use App\Models\Comment;
 use App\Services\CommentService;
@@ -36,7 +37,7 @@ class CommentController extends Controller
     {
         return $this->execute(function () use ($request){
             $comment = $this->commentService->store($request->validated());
-            return CommentResource::make($comment);
+            return CommentResource::make($comment ->load('replies'));
         }, CommentResponseEnum::COMMENT_CREATED);
     }
 
@@ -53,11 +54,11 @@ class CommentController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(CommentRequest $request, Comment $comment)
+    public function update(UpdateCommentRequest $request, Comment $comment)
     {
         return $this->execute(function () use ($request, $comment){
             $comment = $this->commentService->update($request->validated(), $comment);
-            return CommentResource::make($comment);
+            return CommentResource::make($comment->load('replies'));
         }, CommentResponseEnum::COMMENT_UPDATE);
     }
 
