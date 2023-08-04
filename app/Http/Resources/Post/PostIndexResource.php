@@ -3,6 +3,7 @@
 namespace App\Http\Resources\Post;
 
 use App\Http\Resources\Tag\TagResource;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -25,6 +26,7 @@ class PostIndexResource extends JsonResource
             'read_time' => ceil($body/150),
             'views' => $this->views,
             'image' => $this->getFirstMedia('post-images')?->getUrl(),
+            'published' => Carbon::parse($this->published_at)->format('m/d/Y H:i'),
             'category' => $this->category->name,
             'tags' => TagResource::collection($this->tags)
         ];

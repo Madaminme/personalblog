@@ -2,6 +2,8 @@
 
 namespace App\Http\Resources\Tag;
 
+use App\Http\Resources\Post\PostIndexResource;
+use App\Http\Resources\Post\PostResource;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
@@ -17,7 +19,8 @@ class TagShowResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'posts' => $this->whenLoaded('posts')->count()
+            'post number' => $this->whenLoaded('posts')->count(),
+            'posts' => PostIndexResource::collection($this->whenLoaded('posts'))
         ];
     }
 }

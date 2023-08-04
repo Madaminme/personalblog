@@ -31,6 +31,7 @@ class PostFactory extends Factory
             'category_id' => $category->id,
             'instagram' => $this->faker->url,
             'github' => $this->faker->url,
+            'is_published' => $this->faker->boolean,
             'published_at' => $this->faker->date
         ];
     }

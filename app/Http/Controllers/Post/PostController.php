@@ -10,9 +10,11 @@ use App\Http\Resources\CommentResource;
 use App\Http\Resources\Post\PostIndexResource;
 use App\Http\Resources\Post\PostResource;
 use App\Http\Resources\Post\ShowPostResource;
+use App\Jobs\ProcessPostPublish;
 use App\Models\Comment;
 use App\Models\Post;
 use App\Services\PostService;
+use Illuminate\Support\Carbon;
 
 class PostController extends Controller
 {
@@ -22,13 +24,14 @@ class PostController extends Controller
     {
         $this->postService = $postService;
     }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return $this->execute(function (){
-            $posts = Post::paginate(5);
+        return $this->execute(function () {
+            $posts = Post::query()->where('is_published', '=', true)->paginate(5);
             return PostIndexResource::collection($posts);
         }, PostResponseEnum::POST_LIST);
     }
@@ -38,8 +41,12 @@ class PostController extends Controller
      */
     public function store(PostRequest $request)
     {
-        return $this->execute(function () use ($request){
-            $post = $this->postService->store($request->validated());
+        return $this->execute(function () use ($request) {
+            $validated = $request->validated();
+            $post = $this->postService->store($validated);
+            if (key_exists('published_at', $validated)){
+                ProcessPostPublish::dispatch($post)->delay(Carbon::make($validated['published_at']));
+            }
             return PostResource::make($post);
         }, PostResponseEnum::POST_CREATE);
     }
@@ -49,10 +56,10 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        return $this->execute(function () use ($post){
-           $post->views ++;
-           $post->save();
-           return ShowPostResource::make($post);
+        return $this->execute(function () use ($post) {
+            $post->views++;
+            $post->save();
+            return ShowPostResource::make($post);
         }, PostResponseEnum::POST_SHOW);
     }
 
@@ -61,7 +68,7 @@ class PostController extends Controller
      */
     public function update(UpdatePostRequest $request, Post $post)
     {
-        return $this->execute(function () use ($request, $post){
+        return $this->execute(function () use ($request, $post) {
             $post = $this->postService->update($request->validated(), $post);
             return PostResource::make($post);
         }, PostResponseEnum::POST_UPDATE);
@@ -72,14 +79,14 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        return $this->execute(function () use ($post){
+        return $this->execute(function () use ($post) {
             $this->postService->delete($post);
         }, PostResponseEnum::POST_DELETE);
     }
 
     public function recent()
     {
-        return $this->execute(function (){
+        return $this->execute(function () {
             $posts = Post::query()->latest()->limit(5)->get();
             return PostIndexResource::collection($posts);
         }, PostResponseEnum::RECENT_POST);
@@ -87,7 +94,7 @@ class PostController extends Controller
 
     public function popular()
     {
-        return $this->execute(function (){
+        return $this->execute(function () {
             $populars = Post::query()->orderByDesc('views')->limit(5)->get();
             return PostIndexResource::collection($populars);
         }, PostResponseEnum::POPULAR_POSTS);
@@ -95,7 +102,7 @@ class PostController extends Controller
 
     public function featured()
     {
-        return $this->execute(function (){
+        return $this->execute(function () {
             $featured = Post::withCount('comments')->orderBy('comments_count', 'desc')->get();
             return PostIndexResource::collection($featured);
         }, PostResponseEnum::FEATURED_POSTS);
@@ -103,13 +110,13 @@ class PostController extends Controller
 
     public function comments(int $postId)
     {
-        return $this->execute(function () use ($postId){
-           $comments = Comment::query()
-               ->with('replies')
-               ->where('post_id', '=', $postId)
-               ->paginate(5);
+        return $this->execute(function () use ($postId) {
+            $comments = Comment::query()
+                ->with('replies')
+                ->where('post_id', '=', $postId)
+                ->paginate(5);
 
-           return CommentResource::collection($comments);
+            return CommentResource::collection($comments);
         }, PostResponseEnum::POST_COMMENTS);
     }
 }

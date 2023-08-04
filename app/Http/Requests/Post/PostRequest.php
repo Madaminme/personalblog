@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Post;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class PostRequest extends FormRequest
 {
@@ -32,7 +33,7 @@ class PostRequest extends FormRequest
             'image' => 'nullable|file|mimes:jpg,jpeg,png|max:10240',
             'instagram' => 'nullable|string|max:255',
             'github' => 'nullable|string|max:255',
-            'published_at' => 'nullable|date'
+            'published_at' => ['nullable', 'date', 'after_or_equal:' . now()->format('Y-m-d-H-i')]
         ];
     }
 }

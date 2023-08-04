@@ -15,26 +15,28 @@ class PostService
      */
     public function store(array $validated)
     {
-        if (!isset($validated['slug'])){
-            $validated['slug'] = str()->slug($validated['title']);
-        }
+        $validated['slug'] = $validated['slug'] ?? str()->slug($validated['title']);
         $validated['user_id'] = auth()->id();
-        $validated['read_time'] = ceil(str_word_count($validated['body'])/150);
+        $validated['read_time'] = ceil(str_word_count($validated['body']) / 150);
+
         $post = Post::query()->create($validated);
+
         $post->tags()->attach($validated['tags']);
+
         if (isset($validated['image'])) {
-                $post->addMedia($validated['image'])->toMediaCollection('post-images');
+            $post->addMedia($validated['image'])->toMediaCollection('post-images');
         }
+
         return $post;
     }
 
     public function update($validated, $post)
     {
-        if (!isset($validated['slug'])){
+        if (!isset($validated['slug'])) {
             $validated['slug'] = str()->slug($validated['title']);
         }
         $validated['user_id'] = auth()->id();
-        $validated['read_time'] = ceil(str_word_count($validated['body'])/150);
+        $validated['read_time'] = ceil(str_word_count($validated['body']) / 150);
         $post->update($validated);
         $post->tags()->sync($validated['tags']);
         if (isset($validated['image'])) {
@@ -48,8 +50,7 @@ class PostService
     public function delete($post): void
     {
         $post->tags()->detach();
-        if (isset($post->image))
-        {
+        if (isset($post->image)) {
             Storage::delete($post->image);
         }
         $post->delete();

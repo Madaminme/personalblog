@@ -23,7 +23,7 @@ return new class extends Migration
             $table->foreignId('category_id');
             $table->string('instagram')->nullable();
             $table->string('github')->nullable();
-            $table->timestamp('published_at')->default(now());
+            $table->timestamp('published_at')->nullable();
             $table->timestamps();
         });
     }
