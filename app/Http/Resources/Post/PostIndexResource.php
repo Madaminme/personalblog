@@ -26,7 +26,7 @@ class PostIndexResource extends JsonResource
             'read_time' => ceil($body/150),
             'views' => $this->views,
             'image' => $this->getFirstMedia('post-images')?->getUrl(),
-            'published' => Carbon::parse($this->published_at)->format('m/d/Y H:i'),
+            'published_at' => Carbon::parse($this->published_at)->format('m/d/Y H:i'),
             'category' => $this->category->name,
             'tags' => TagResource::collection($this->tags)
         ];

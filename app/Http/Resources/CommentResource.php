@@ -21,6 +21,7 @@ class CommentResource extends JsonResource
             'post_id' => $this->post_id,
             'replies' => static::collection($this->whenLoaded('replies')),
             'body' => $this->body,
+            'created_at' => $this->created_at,
             'token' => $this->remember_token
         ];
     }

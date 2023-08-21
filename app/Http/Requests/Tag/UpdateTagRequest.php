@@ -25,6 +25,7 @@ class UpdateTagRequest extends FormRequest
         $tag = request()->route('tag');
         return [
             'name' => ['nullable', 'string', Rule::unique('tags', 'name')->ignoreModel($tag)],
+            'slug' =>  ['nullable', 'string', Rule::unique('tags', 'slug')->ignoreModel($tag)],
             'image' => 'nullable|file|mimes:jpg,jpeg,png|max:10240'
         ];
     }

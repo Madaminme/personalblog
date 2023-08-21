@@ -23,6 +23,7 @@ class TagRequest extends FormRequest
     {
         return [
             'name' => 'required|string|unique:tags,name|max:100',
+            'description' => 'required|string|max:255',
             'image' => 'required|file|mimes:jpg,jpeg,png|max:10240'
         ];
     }

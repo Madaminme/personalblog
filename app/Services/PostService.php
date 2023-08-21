@@ -18,9 +18,9 @@ class PostService
         $validated['slug'] = $validated['slug'] ?? str()->slug($validated['title']);
         $validated['user_id'] = auth()->id();
         $validated['read_time'] = ceil(str_word_count($validated['body']) / 150);
+        $validated['is_published'] =  !isset($validated['published_at']);
 
         $post = Post::query()->create($validated);
-
         $post->tags()->attach($validated['tags']);
 
         if (isset($validated['image'])) {

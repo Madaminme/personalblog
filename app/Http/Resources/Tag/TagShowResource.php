@@ -19,7 +19,8 @@ class TagShowResource extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'post number' => $this->whenLoaded('posts')->count(),
+            'description' => $this->description,
+            'post_number' => $this->whenLoaded('posts')->count(),
             'posts' => PostIndexResource::collection($this->whenLoaded('posts'))
         ];
     }

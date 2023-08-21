@@ -15,6 +15,7 @@ class Tag extends Model implements HasMedia
 
     protected $fillable = [
         'name',
+        'slug'
     ];
 
     public function posts(): BelongsToMany

@@ -26,6 +26,7 @@ class ProcessPostPublish implements ShouldQueue
      */
     public function handle(): void
     {
-        $this->post->update(['is_published' => true]);
+            $this->post->is_published = true;
+            $this->post->save();
     }
 }

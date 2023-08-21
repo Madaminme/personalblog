@@ -19,7 +19,7 @@ class LoginController extends Controller
                 $token = $user->createToken('api_token')->plainTextToken;
                 return AuthResource::make(['user' => $user, 'token' => $token,]);
             }
-            return null;
+            return throw new \Exception('Unauthorized');
         }, UserResponseEnum::USER_LOGIN);
         }
 }
