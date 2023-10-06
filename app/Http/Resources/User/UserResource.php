@@ -21,7 +21,8 @@ class UserResource extends JsonResource
             'email' => $this['email'],
             'instagram' => $this['instagram'],
             'github' => $this['github'],
-            'telegram' => $this['telegram']
+            'telegram' => $this['telegram'],
+            'image' => $this->getFirstMedia('user-images')?->getUrl(),
         ];
     }
 }

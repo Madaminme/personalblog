@@ -26,7 +26,8 @@ class ShowPostResource extends JsonResource
             'views' => $this->views,
             'image' => $this->resource->getMedia('post-images')->pluck('original_url'),
             'category' => $this->category->name,
-            'tags' => TagResource::collection($this->tags),
+            'tags' => TagResource::collection($this->whenLoaded('tags')),
+            'comments' => CommentResource::collection($this->whenLoaded('comments')),
             'published_at' => Carbon::parse($this->published_at)->format('m/d/Y')
         ];
     }

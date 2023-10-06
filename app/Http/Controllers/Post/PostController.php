@@ -59,7 +59,7 @@ class PostController extends Controller
         return $this->execute(function () use ($post) {
             $post->views++;
             $post->save();
-            return ShowPostResource::make($post);
+            return ShowPostResource::make($post->load('tags', 'comments'));
         }, PostResponseEnum::POST_SHOW);
     }
 

@@ -14,12 +14,14 @@ class RegisterController extends Controller
         public function __invoke(RegisterRequest $request)
     {
         return $this->execute(function () use ($request){
+            $validated = $request->validated();
             $user = User::query()->create([
-                'name' => $request->name,
-                'username' => $request->username,
-                'email' => $request->email,
-                'password' => bcrypt($request->password),
+                'name' => $validated->name,
+                'username' => $validated->username,
+                'email' => $validated->email,
+                'password' => bcrypt($validated->password),
             ]);
+            $user->addMedia($validated['image'])->toMediaCollection('user-images');
             $token = $user->createToken('api_token')->plainTextToken;
             return AuthResource::make(['user'=>$user,'token'=>$token]);
         },UserResponseEnum::USER_REGISTER);

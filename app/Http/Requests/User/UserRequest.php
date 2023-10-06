@@ -24,7 +24,7 @@ class UserRequest extends FormRequest
         return [
             "name" => "required|string|max:200",
             "username" => "required|string|max:200|unique:users,username",
-            "email" => "required|email|unique:users|unique:users,email",
+            "email" => "required|email",
             "password" => "required|string|min:8",
             "instagram" => "nullable|url",
             "github" => "nullable|url",
