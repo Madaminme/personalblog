@@ -25,7 +25,7 @@ class ProjectController extends Controller
     public function index()
     {
         return $this->execute(function (){
-            $projects = Project::all();
+            $projects = Project::paginate(5);
             return ProjectIndexResource::collection($projects);
         }, ProjectResponseEnum::PROJECT_LIST);
     }
