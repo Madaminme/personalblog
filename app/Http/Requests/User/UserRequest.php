@@ -22,10 +22,10 @@ class UserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "name" => "required|string|max:200",
-            "username" => "required|string|max:200|unique:users,username",
-            "email" => "required|email",
-            "password" => "required|string|min:8",
+            "name" => "nullable|string|max:200",
+            "username" => "nullable|string|max:200|unique:users,username",
+            "email" => "nullable|email",
+            "password" => "nullable|string|min:8",
             "instagram" => "nullable|url",
             "github" => "nullable|url",
             "telegram" => "nullable|url",

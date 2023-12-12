@@ -18,13 +18,11 @@ use Illuminate\Support\Carbon;
 
 class PostController extends Controller
 {
-    private PostService $postService;
 
-    public function __construct(PostService $postService)
+    public function __construct(private PostService $postService)
     {
-        $this->postService = $postService;
+        $this->authorizeResource(Post::class, 'post');
     }
-
     /**
      * Display a listing of the resource.
      */

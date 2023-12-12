@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\User\RegisterRequest;
 use App\Http\Resources\AuthResource;
 use App\Models\User;
-use Illuminate\Http\Request;
 
 class RegisterController extends Controller
 {
@@ -16,12 +15,15 @@ class RegisterController extends Controller
         return $this->execute(function () use ($request){
             $validated = $request->validated();
             $user = User::query()->create([
-                'name' => $validated->name,
-                'username' => $validated->username,
-                'email' => $validated->email,
-                'password' => bcrypt($validated->password),
+                'name' => $validated['name'],
+                'username' => $validated['username'],
+                'email' => $validated['email'],
+                'password' => bcrypt($validated['password']),
             ]);
-            $user->addMedia($validated['image'])->toMediaCollection('user-images');
+
+            if ($request->hasFile('image')){
+                $user->addMedia($validated['image'])->toMediaCollection('user-images');
+            }
             $token = $user->createToken('api_token')->plainTextToken;
             return AuthResource::make(['user'=>$user,'token'=>$token]);
         },UserResponseEnum::USER_REGISTER);

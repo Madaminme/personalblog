@@ -29,40 +29,40 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('v1')->group(function (){
+Route::prefix('v1')->group(function () {
 
-    Route::middleware('auth:sanctum')->group(function (){
-       Route::get('logout', LogoutController::class);
-
-        //User routes
-        Route::apiResource('users', UserController::class);
-        //Post routes
-        Route::apiResource('posts', PostController::class);
-        //Category routes
-        Route::apiResource('categories', CategoryController::class);
-        //Type routes
-        Route::apiResource('types', TypeController::class);
-        //Project route
-        Route::apiResource('projects', ProjectController::class);
-        //Contact routes
-        Route::get('contacts', [ContactController::class, 'index'])->name('contact.index');
-        //Tags
-        Route::apiResource('tags', TagController::class);
-        //Type routes
-        Route::apiResource('types', TypeController::class);
-        //Newsletters
-        Route::get('newsletters', [NewsletterController::class, 'index'])->name('newsletter.index');
-
-
-    });
-
-    Route::middleware('guest:sanctum')->group(function (){
+    Route::middleware('guest:sanctum')->group(function () {
         Route::post('register', RegisterController::class);
         Route::post('login', LoginController::class);
     });
 
+    //ADMIN ROUTES
+    Route::middleware('isAdmin')->group(function () {
+        //User routes
+        Route::apiResource('users', UserController::class);
+        //Category routes
+        Route::apiResource('categories', CategoryController::class)->except(['index', 'show']);
+        //Types routes
+        Route::apiResource('types', TypeController::class)->except(['index', 'show']);
+        //Newsletters routes
+        Route::get('newsletters', [NewsletterController::class, 'index']);
+        //Contacts routes
+        Route::get('contacts', [ContactController::class, 'index']);
+    });
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::get('logout', LogoutController::class);
+        //Post routes
+        Route::apiResource('posts', PostController::class);
+        //Category routes
+        Route::apiResource('categories', CategoryController::class);
+        //Tags routes
+        Route::apiResource('tags', TagController::class);
+    });
+
+
     //---------------------public routes-----------------//
-    Route::middleware('web')->group(function (){
+    Route::middleware('web')->group(function () {
         Route::get('/auth/google/redirect', [ProviderController::class, 'redirect']);
         Route::get('/auth/google/callback', [ProviderController::class, 'callback']);
     });
@@ -87,12 +87,12 @@ Route::prefix('v1')->group(function (){
     //Tags
     Route::get('tags', [TagController::class, 'index']);
     //Newsletter route
-    Route::post('newsletters', [NewsletterController::class, 'store'])->name('newsletter.store');
+    Route::post('newsletters', [NewsletterController::class, 'store']);
     //Contacts
-    Route::post('contacts', [ContactController::class, 'store'])->name('contact.store');
+    Route::post('contacts', [ContactController::class, 'store']);
     //Comments
-    Route::get('last_comments', [CommentController::class, 'last_comments'])->name('last_comments');
-    Route::post('comments', [CommentController::class, 'store'])->name('comment.store');
-    Route::get('active_users', ActiveUserController::class)->name('active-users');
-    Route::put('comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
+    Route::get('last_comments', [CommentController::class, 'last_comments']);
+    Route::post('comments', [CommentController::class, 'store']);
+    Route::get('active_users', ActiveUserController::class);
+    Route::put('comments/{comment}', [CommentController::class, 'update']);
 });
